@@ -27,7 +27,7 @@ import (
 	"strings"
 	"time"
 
-	"github.com/PaulARoy/azurestoragecache"
+	//"github.com/PaulARoy/azurestoragecache"
 	"github.com/die-net/lrucache"
 	"github.com/die-net/lrucache/twotier"
 	"github.com/diegomarangoni/gcscache"
@@ -36,7 +36,7 @@ import (
 	rediscache "github.com/gregjones/httpcache/redis"
 	"github.com/peterbourgon/diskv"
 	"willnorris.com/go/imageproxy"
-	"willnorris.com/go/imageproxy/internal/s3cache"
+//	"github.com/willnorris/imageproxy/internal/s3cache"
 )
 
 const defaultMemorySize = 100
@@ -139,8 +139,8 @@ func parseCache(c string) (imageproxy.Cache, error) {
 	}
 
 	switch u.Scheme {
-	case "azure":
-		return azurestoragecache.New("", "", u.Host)
+/*	case "azure":
+		return azurestoragecache.New("", "", u.Host)*/
 	case "gcs":
 		return gcscache.New(u.String()), nil
 	case "memory":
@@ -151,8 +151,9 @@ func parseCache(c string) (imageproxy.Cache, error) {
 			return nil, err
 		}
 		return rediscache.NewWithClient(conn), nil
-	case "s3":
+/*	case "s3":
 		return s3cache.New(u.String())
+		*/
 	case "file":
 		fallthrough
 	default:

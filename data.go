@@ -21,6 +21,8 @@ import (
 	"regexp"
 	"strconv"
 	"strings"
+	"log"
+	"encoding/base64"
 )
 
 const (
@@ -333,8 +335,21 @@ func NewRequest(r *http.Request, baseURL *url.URL) (*Request, error) {
 	var err error
 	req := &Request{Original: r}
 
-	path := r.URL.EscapedPath()[1:] // strip leading slash
+	var path = r.URL.EscapedPath()[1:] // strip leading slash
+	log.Printf("Url: %s", path)
+	if !strings.Contains(path,"http") {
+		url, _err := base64.StdEncoding.DecodeString(path)
+		log.Printf("Base64 code: %s", string(url))
+		if _err != nil {
+			msg := fmt.Sprintf("invalid base64 encodede request: %v", _err)
+			log.Print(msg)
+			return nil, URLError{ "Invalid base64 URL", r.URL}
+		}
+
+		path = string(url)
+	}
 	req.URL, err = parseURL(path)
+
 	if err != nil || !req.URL.IsAbs() {
 		// first segment should be options
 		parts := strings.SplitN(path, "/", 2)
