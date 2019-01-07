@@ -27,7 +27,6 @@ import (
 	"strings"
 	"time"
 
-	//"github.com/PaulARoy/azurestoragecache"
 	"github.com/die-net/lrucache"
 	"github.com/die-net/lrucache/twotier"
 	"github.com/diegomarangoni/gcscache"
@@ -35,8 +34,7 @@ import (
 	"github.com/gregjones/httpcache/diskcache"
 	rediscache "github.com/gregjones/httpcache/redis"
 	"github.com/peterbourgon/diskv"
-	"willnorris.com/go/imageproxy"
-//	"github.com/willnorris/imageproxy/internal/s3cache"
+	"github.com/hyp3rventures/imageproxy"
 )
 
 const defaultMemorySize = 100

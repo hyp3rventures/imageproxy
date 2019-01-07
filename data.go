@@ -332,37 +332,32 @@ func (r Request) String() string {
 // 	http://localhost//http://example.com/image.jpg
 // 	http://localhost/http://example.com/image.jpg
 func NewRequest(r *http.Request, baseURL *url.URL) (*Request, error) {
-	var err error
 	req := &Request{Original: r}
 
-	var path = r.URL.EscapedPath()[1:] // strip leading slash
-	log.Printf("Url: %s", path)
-	if !strings.Contains(path,"http") {
-		url, _err := base64.StdEncoding.DecodeString(path)
-		log.Printf("Base64 code: %s", string(url))
-		if _err != nil {
-			msg := fmt.Sprintf("invalid base64 encodede request: %v", _err)
-			log.Print(msg)
-			return nil, URLError{ "Invalid base64 URL", r.URL}
-		}
+	var encodedTgt = r.URL.EscapedPath()[1:] // strip leading slash
+	log.Printf("Url: %s", encodedTgt)
 
-		path = string(url)
-	}
-	req.URL, err = parseURL(path)
+    targetUrlBytes, err := base64.StdEncoding.DecodeString(encodedTgt)
+    if err != nil {
+        msg := fmt.Sprintf("invalid base64 encodede request: %v", err)
+        log.Print(msg)
+        return nil, URLError{ "Invalid base64 URL", r.URL}
+    }
+    targetUrl := string(targetUrlBytes)
+    log.Printf("Base64 code: %s", targetUrl)
+
+	req.URL, err = parseURL(targetUrl)
 
 	if err != nil || !req.URL.IsAbs() {
 		// first segment should be options
-		parts := strings.SplitN(path, "/", 2)
+		parts := strings.SplitN(targetUrl, "/", 2)
 		if len(parts) != 2 {
 			return nil, URLError{"too few path segments", r.URL}
 		}
-
-		var err error
 		req.URL, err = parseURL(parts[1])
 		if err != nil {
 			return nil, URLError{fmt.Sprintf("unable to parse remote URL: %v", err), r.URL}
 		}
-
 		req.Options = ParseOptions(parts[0])
 	}
 
@@ -379,7 +374,8 @@ func NewRequest(r *http.Request, baseURL *url.URL) (*Request, error) {
 	}
 
 	// query string is always part of the remote URL
-	req.URL.RawQuery = r.URL.RawQuery
+	//req.URL.RawQuery = r.URL.RawQuery
+    log.Printf("Using target: %s", req.URL)
 	return req, nil
 }
 
