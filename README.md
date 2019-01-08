@@ -1,5 +1,18 @@
-# imageproxy [![Build Status](https://travis-ci.org/willnorris/imageproxy.svg?branch=master)](https://travis-ci.org/willnorris/imageproxy) [![GoDoc](https://godoc.org/willnorris.com/go/imageproxy?status.svg)](https://godoc.org/willnorris.com/go/imageproxy) [![Apache 2.0 License](https://img.shields.io/badge/license-Apache%202.0-blue.svg?style=flat)](LICENSE)
+This is forked from Will Norris.
 
+Instead of `http://{host}/{options}/{remote_url}`
+
+it now expects `http://{host}/{base64_encoded_remote_url}`
+
+To work on this project:
+
+1. be a go programmer
+1. `go get` this repo
+1. make your edits
+1. run `publish-image.sh` to publish a docker image with the updated code
+1. Restart the ECS tasks to pick up the new image.
+
+# ORIGINAL README
 imageproxy is a caching image proxy server written in go.  It features:
 
  - basic image adjustments like resizing, cropping, and rotation
